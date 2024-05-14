@@ -1,73 +1,78 @@
-﻿namespace Diamante
+﻿using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
+
+namespace DesafioDiamante
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            /*
-             * Diamantes de x Dado um número ímpar, exiba um diamante desenhado com a letra ‘x’.
-            */
-            int tamamanhoDiamante = 0;
-            do
+
+            int tamDiamante = 0;
+            tamDiamante = definirTamanho();
+            while (deveSerImpar(tamDiamante) == false)
             {
-                Console.Clear();
-                Console.BackgroundColor = ConsoleColor.Green;
-                Console.Title = "Diamante";
+                Console.WriteLine("O número digitado é inválido. Tente novamente.");
+                tamDiamante = definirTamanho();
+            }
 
-                Console.WriteLine("Quero imprimir um diamante para números impar.\r\n" +
-                    "Entre com o tamanho do diamante:");
-                tamamanhoDiamante = Convert.ToInt16(Console.ReadLine());
-
-                if (DeveSerImpar(tamamanhoDiamante) is false)
-                {
-                    Console.WriteLine("Preciso de um número impar");
-                    return;
-                }
-
-                int meio = tamamanhoDiamante / 2;
-
-                for (int i = 0; i <= meio; i++)
-                {
-                    PercorrerEspaçosVertical(tamamanhoDiamante, meio, i);
-                    Console.WriteLine();
-                }
-
-                for (int i = meio - 1; i >= 0; i--)
-                {
-                    PercorrerEspaçosVertical(tamamanhoDiamante, meio, i);
-                    Console.WriteLine();
-                }
-                Console.ReadKey();
-            } while (DeveSerImpar(tamamanhoDiamante));
-
+            char[,] diamante = new char[tamDiamante, tamDiamante];
+            int meio = tamDiamante / 2;
+            firtsHalfDiamond(tamDiamante, meio);
+            secondHalfDiamond(tamDiamante, meio);
         }
 
-        private static void PercorrerEspaçosVertical(int tamamanhoDiamante, int meio, int i)
+        static bool deveSerImpar(int tamDiamante)
         {
-            for (int j = 0; j < tamamanhoDiamante; j++)
+            bool impar = tamDiamante % 2 != 0;
+            return impar;
+        }
+
+        static int definirTamanho()
+        {
+            Console.WriteLine("Digite um número ímpar: ");
+            int tamDiamante = Convert.ToInt32(Console.ReadLine());
+            return tamDiamante;
+        }
+
+        static void firtsHalfDiamond(int tamDiamante, int meio)
+        {
+
+            for (int i = 0; i <= meio; i++)
             {
-                ValidarCorpoDiamante(meio, i, j);
+                for (int j = 0; j < tamDiamante; j++)
+                {
+                    if (j >= meio - i && j <= meio + i)
+                    {
+                        Console.Write("x");
+                    }
+                    else
+                    {
+                        Console.Write(" ");
+                    }
+                }
+                Console.WriteLine();
             }
         }
 
-        private static void ValidarCorpoDiamante(int meio, int i, int j)
+        static void secondHalfDiamond(int tamDiamante, int meio)
         {
-            bool validarLadoEsquerdo = j >= meio - i;
-            bool validarLadoDireito = j <= meio + i;
-
-            if (validarLadoEsquerdo && validarLadoDireito)
+            for (int i = meio - 1; i >= 0; i--)
             {
-                Console.Write("X");
+                for (int j = 0; j < tamDiamante; j++)
+                {
+                    if (j >= meio - i && j <= meio + i)
+                    {
+                        Console.Write("x");
+                    }
+                    else
+                    {
+                        Console.Write(" ");
+                    }
+                }
+                Console.WriteLine();
             }
-            else
-            {
-                Console.Write(" ");
-            }
-        }
-
-        static bool DeveSerImpar(int numero)
-        {
-            return numero % 2 != 0;
         }
     }
+
 }
